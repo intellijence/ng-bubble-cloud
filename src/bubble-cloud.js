@@ -129,7 +129,7 @@ angular.module('bubbleCloud', [])
         $scope.pack_layout = d3.layout.pack()
             .sort(null)
             .value(function (datum) {
-                return datum.object[valueAttr];
+                return datum.object ? datum.object[valueAttr] : 0;
             })
             .size([diameter, diameter])
             .padding(1.5);
@@ -192,7 +192,7 @@ angular.module('bubbleCloud', [])
         var tooltip_format_fn = $scope.tooltip_format_fn;
 
         node.attr('transform', function (datum) {
-            return 'translate(' + datum.x + ',' + datum.y + ')';
+            return 'translate(' + (datum.x ? datum.x:0) + ',' + (datum.y?datum.y:0) + ')';
         });
 
         node.select('title')
@@ -200,13 +200,13 @@ angular.module('bubbleCloud', [])
                 if (tooltip_format_fn) {
                     return tooltip_format_fn(datum);
                 } else {
-                    return datum.object[labelAttr] + ': ' + d3.format(',d')(datum.object[valueAttr]);
+                    return datum.object ? datum.object[labelAttr] + ': ' + d3.format(',d')(datum.object[valueAttr]) : '';
                 }
             });
 
         node.select('circle')
             .attr('r', function (datum) {
-                return datum.r;
+                return datum.r ? datum.r : 0;
             })
             .style('fill', function (datum) {
                 return fill_color_fn(datum.group);
@@ -217,7 +217,7 @@ angular.module('bubbleCloud', [])
                 return label_color_fn(datum.group);
             })
             .text(function (datum) {
-                var label = datum.object[labelAttr];
+                var label = datum.object ? datum.object[labelAttr] : '';
                 return label ? label.substring(0, datum.r / 3) : '';
             });
 
